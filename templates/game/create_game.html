@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="dashboard-header">
+    <h2>Create New Game</h2>
+    <div style="display: flex; gap: 1rem;">
+        <button id="btn-save" class="btn btn-primary">Save Game</button>
+        <a href="{% url 'home' %}" class="btn" style="background: rgba(255,255,255,0.1);">Cancel</a>
+    </div>
+</div>
+
+<div class="glass-panel" style="margin-bottom: 2rem;">
+    <div class="form-group" style="max-width: 400px;">
+        <label for="game-title">Game Title</label>
+        <input type="text" id="game-title" class="form-control" placeholder="My Awesome Game" required>
+    </div>
+</div>
+
+<div class="center-board">
+    <div class="jeopardy-grid" id="editor-grid" style="grid-template-columns: repeat(5, 1fr);">
+        <!-- Categories and Questions will be injected here -->
+    </div>
+</div>
+
+<!-- Editor Modal -->
+<div class="modal-overlay" id="editor-modal">
+    <div class="modal-content">
+        <h3 id="editor-modal-title">Edit Question</h3>
+        <input type="hidden" id="edit-cat-index">
+        <input type="hidden" id="edit-q-index">
+        
+        <div class="form-group">
+            <label>Point Value</label>
+            <input type="number" id="edit-points" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label>Question Text</label>
+            <textarea id="edit-text" class="form-control" rows="3" required></textarea>
+        </div>
+        <div class="form-group">
+            <label>Answer Text</label>
+            <input type="text" id="edit-answer" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label>Hint (Optional)</label>
+            <input type="text" id="edit-hint" class="form-control">
+        </div>
+        
+        <div class="modal-actions">
+            <button class="btn btn-primary" id="btn-save-question">Save Question</button>
+            <button class="btn" style="background: rgba(255,255,255,0.1);" id="btn-close-modal">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Initial state: 5 categories, 5 questions each
+    const gameState = {
+        title: "",
+        categories: [
+            { name: "Category 1", questions: [] },
+            { name: "Category 2", questions: [] },
+            { name: "Category 3", questions: [] },
+            { name: "Category 4", questions: [] },
+            { name: "Category 5", questions: [] },
+        ]
+    };
+
+    // Initialize with default point values
+    for (let c = 0; c < 5; c++) {
+        for (let q = 0; q < 5; q++) {
+            gameState.categories[c].questions.push({
+                point_value: (q + 1) * 100,
+                text: "",
+                answer: "",
+                hint: ""
+            });
+        }
+    }
+
+    function renderEditor() {
+        const grid = document.getElementById('editor-grid');
+        grid.innerHTML = '';
+        
+        // Render Categories
+        gameState.categories.forEach((cat, cIdx) => {
+            const header = document.createElement('div');
+            header.className = 'category-header';
+            header.style.position = 'relative';
+            
+            const nameSpan = document.createElement('span');
+            nameSpan.innerText = cat.name;
+            nameSpan.title = "Click to rename category";
+            nameSpan.style.cursor = 'pointer';
+            nameSpan.onclick = () => {
+                const newName = prompt("Enter category name:", cat.name);
+                if (newName) {
+                    cat.name = newName;
+                    renderEditor();
+                }
+            };
+            
+            const deleteBtn = document.createElement('button');
+            deleteBtn.innerText = '✖';
+            deleteBtn.style.position = 'absolute';
+            deleteBtn.style.right = '5px';
+            deleteBtn.style.top = '5px';
+            deleteBtn.style.background = 'none';
+            deleteBtn.style.border = 'none';
+            deleteBtn.style.color = 'rgba(255,255,255,0.5)';
+            deleteBtn.style.cursor = 'pointer';
+            deleteBtn.onclick = (e) => {
+                e.stopPropagation();
+                if (confirm(`Remove category "${cat.name}"?`)) {
+                    gameState.categories.splice(cIdx, 1);
+                    // update grid columns
+                    document.getElementById('editor-grid').style.gridTemplateColumns = `repeat(${gameState.categories.length}, 1fr)`;
+                    renderEditor();
+                }
+            };
+            
+            header.appendChild(nameSpan);
+            header.appendChild(deleteBtn);
+            grid.appendChild(header);
+        });
+        
+        // Render Questions
+        for (let q = 0; q < 5; q++) {
+            for (let c = 0; c < gameState.categories.length; c++) {
+                const question = gameState.categories[c].questions[q];
+                const tile = document.createElement('div');
+                tile.className = 'question-tile';
+                // Highlight tiles that have text
+                if (question.text.trim() !== '') {
+                    tile.style.background = 'rgba(16, 185, 129, 0.2)'; // Green tint indicating it's filled
+                    tile.style.borderColor = '#10b981';
+                }
+                tile.innerText = question.point_value;
+                tile.onclick = () => openEditorModal(c, q);
+                grid.appendChild(tile);
+            }
+        }
+    }
+
+    function openEditorModal(cIdx, qIdx) {
+        const q = gameState.categories[cIdx].questions[qIdx];
+        document.getElementById('edit-cat-index').value = cIdx;
+        document.getElementById('edit-q-index').value = qIdx;
+        document.getElementById('edit-points').value = q.point_value;
+        document.getElementById('edit-text').value = q.text;
+        document.getElementById('edit-answer').value = q.answer;
+        document.getElementById('edit-hint').value = q.hint;
+        
+        document.getElementById('editor-modal').classList.add('active');
+    }
+
+    document.getElementById('btn-close-modal').onclick = () => {
+        document.getElementById('editor-modal').classList.remove('active');
+    };
+
+    document.getElementById('btn-save-question').onclick = () => {
+        const cIdx = document.getElementById('edit-cat-index').value;
+        const qIdx = document.getElementById('edit-q-index').value;
+        
+        const qText = document.getElementById('edit-text').value;
+        const qAnswer = document.getElementById('edit-answer').value;
+        
+        if (qText.trim() !== '' && qAnswer.trim() === '') {
+            alert('If you add a question, you must also provide an answer.');
+            return;
+        }
+        
+        gameState.categories[cIdx].questions[qIdx] = {
+            point_value: parseInt(document.getElementById('edit-points').value) || 0,
+            text: qText,
+            answer: qAnswer,
+            hint: document.getElementById('edit-hint').value
+        };
+        
+        document.getElementById('editor-modal').classList.remove('active');
+        renderEditor();
+    };
+
+    document.getElementById('btn-save').onclick = async () => {
+        const title = document.getElementById('game-title').value;
+        if (!title.trim()) {
+            alert('Please enter a game title.');
+            return;
+        }
+        gameState.title = title;
+
+        // Filter out empty questions? Actually, just save everything.
+        // It's a template so empty questions can be skipped on play, but the DB requires text.
+        // Let's filter out questions with no text to avoid database errors
+        const payload = {
+            title: gameState.title,
+            categories: gameState.categories.map(cat => ({
+                name: cat.name,
+                questions: cat.questions.filter(q => q.text.trim() !== '')
+            }))
+        };
+
+        const csrfToken = '{{ csrf_token }}';
+        
+        try {
+            const res = await fetch("{% url 'create_game' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify(payload)
+            });
+            
+            const data = await res.json();
+            if (data.success) {
+                window.location.href = data.redirect_url;
+            } else {
+                alert('Error saving game: ' + data.error);
+            }
+        } catch (e) {
+            console.error(e);
+            alert('Failed to save game.');
+        }
+    };
+
+    // Init UI
+    renderEditor();
+</script>
+{% endblock %}

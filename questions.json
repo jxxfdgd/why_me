@@ -1,0 +1,54 @@
+{
+  "categories": [
+    {
+      "name": "Code & Logic",
+      "questions": [
+        { "point_value": 100, "text": "This language uses 'def' to define a function.", "answer": "Python", "hint": "It's named after a snake." },
+        { "point_value": 200, "text": "This tag is used to create a hyperlink in HTML.", "answer": "<a> tag", "hint": "Stands for 'anchor'." },
+        { "point_value": 300, "text": "This SQL command is used to retrieve data from a database.", "answer": "SELECT", "hint": "You use this when you want to 'choose' data." },
+        { "point_value": 400, "text": "In C++, this operator is used to allocate memory dynamically.", "answer": "new", "hint": "It brings something 'fresh' into existence." },
+        { "point_value": 500, "text": "The time complexity of binary search.", "answer": "O(log n)", "hint": "It halves the search space each time." }
+      ]
+    },
+    {
+      "name": "The Daily Grind",
+      "questions": [
+        { "point_value": 100, "text": "The typical time an early morning gym routine starts.", "answer": "5:00 AM or 6:00 AM", "hint": "Before the sun is fully up." },
+        { "point_value": 200, "text": "This type of exercise primarily improves heart health and endurance.", "answer": "Cardio", "hint": "Running on a treadmill is an example." },
+        { "point_value": 300, "text": "A popular supplement taken right after a workout for muscle recovery.", "answer": "Protein Powder / Shake", "hint": "Whey is a common type." },
+        { "point_value": 400, "text": "The term for dividing a workout schedule to target different muscle groups on different days.", "answer": "Split routine (e.g., Push/Pull/Legs)", "hint": "Dividing things into parts." },
+        { "point_value": 500, "text": "This concept involves gradually increasing the weight or reps to continuously build muscle.", "answer": "Progressive Overload", "hint": "Always doing a little more." }
+      ]
+    },
+    {
+      "name": "Under the Hood",
+      "questions": [
+        { "point_value": 100, "text": "This fluid should be checked regularly using a dipstick.", "answer": "Engine Oil", "hint": "It's usually amber or black." },
+        { "point_value": 200, "text": "If your car battery is dead, you use these to start the car.", "answer": "Jumper cables", "hint": "Red and black clips." },
+        { "point_value": 300, "text": "This dashboard warning light indicates low tire pressure.", "answer": "TPMS (Tire Pressure Monitoring System) Light", "hint": "Looks like an exclamation point inside a horseshoe." },
+        { "point_value": 400, "text": "When the steering wheel vibrates at high speeds, these components likely need balancing.", "answer": "Tires/Wheels", "hint": "They connect your car to the road." },
+        { "point_value": 500, "text": "This component in an MG5 filters the air entering the engine's combustion chamber.", "answer": "Engine Air Filter", "hint": "Keeps dust and debris out." }
+      ]
+    },
+    {
+      "name": "AI & Future",
+      "questions": [
+        { "point_value": 100, "text": "A subfield of AI focused on building algorithms that learn from data.", "answer": "Machine Learning", "hint": "ML." },
+        { "point_value": 200, "text": "The field of AI that deals with enabling computers to interpret visual information.", "answer": "Computer Vision", "hint": "Giving computers 'eyes'." },
+        { "point_value": 300, "text": "This architecture is the foundation for modern Large Language Models like GPT.", "answer": "Transformer", "hint": "More than meets the eye." },
+        { "point_value": 400, "text": "In RAG systems, this process converts text into numerical representations for similarity search.", "answer": "Embedding", "hint": "Putting it into a vector space." },
+        { "point_value": 500, "text": "RAG stands for this.", "answer": "Retrieval-Augmented Generation", "hint": "Fetch, add, create." }
+      ]
+    },
+    {
+      "name": "Soundwaves",
+      "questions": [
+        { "point_value": 100, "text": "The lead singer of Radiohead.", "answer": "Thom Yorke", "hint": "He also has a solo career and is in The Smile." },
+        { "point_value": 200, "text": "Radiohead's critically acclaimed 1997 album featuring 'Paranoid Android'.", "answer": "OK Computer", "hint": "A polite machine." },
+        { "point_value": 300, "text": "This song from 'In Rainbows' features the lyrics 'You'll go to hell for what your dirty mind is thinking'.", "answer": "Nude", "hint": "No clothes." },
+        { "point_value": 400, "text": "The electronic-heavy album Radiohead released in 2000 that polarized fans initially.", "answer": "Kid A", "hint": "Child A." },
+        { "point_value": 500, "text": "The guitarist for Radiohead known for his aggressive style and use of effects pedals.", "answer": "Jonny Greenwood", "hint": "Also a renowned film composer." }
+      ]
+    }
+  ]
+}
