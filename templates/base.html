@@ -10,11 +10,9 @@
 </head>
 <body>
     <nav class="navbar">
-        <div class="logo">WHY ME</div>
+        <a href="{% url 'home' %}" class="logo" style="text-decoration: none;">WHY ME</a>
         <div class="nav-links">
             {% if user.is_authenticated %}
-                <span class="user-badge">Hello, {{ user.username }}</span>
-                <a href="{% url 'home' %}" class="nav-link">Dashboard</a>
                 <form action="{% url 'logout' %}" method="post" style="display: inline;">
                     {% csrf_token %}
                     <button type="submit" class="nav-link btn-logout">Logout</button>
