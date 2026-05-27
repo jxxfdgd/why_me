@@ -11,9 +11,10 @@
 </div>
 
 <div class="glass-panel" style="margin-bottom: 2rem;">
-    <div class="form-group" style="max-width: 400px;">
+    <div class="form-group" style="max-width: 400px; margin-bottom: 0;">
         <label for="game-title">Game Title</label>
         <input type="text" id="game-title" class="form-control" placeholder="My Awesome Game" required>
+        <div id="title-error" style="color: var(--accent-pink); font-size: 0.9rem; margin-top: 0.5rem; display: none;"></div>
     </div>
 </div>
 
@@ -21,6 +22,7 @@
     <div class="jeopardy-grid" id="editor-grid" style="grid-template-columns: repeat(5, 1fr);">
         <!-- Categories and Questions will be injected here -->
     </div>
+    <button id="btn-add-category" class="btn btn-primary" style="margin-top: 1rem; display: none; align-self: center;">+ Add Category</button>
 </div>
 
 <!-- Editor Modal -->
@@ -46,6 +48,8 @@
             <label>Hint (Optional)</label>
             <input type="text" id="edit-hint" class="form-control">
         </div>
+        
+        <div id="modal-error" style="color: var(--accent-pink); font-size: 0.9rem; margin-bottom: 1rem; display: none;"></div>
         
         <div class="modal-actions">
             <button class="btn btn-primary" id="btn-save-question">Save Question</button>
@@ -89,16 +93,22 @@
             header.className = 'category-header';
             header.style.position = 'relative';
             
-            const nameSpan = document.createElement('span');
-            nameSpan.innerText = cat.name;
-            nameSpan.title = "Click to rename category";
-            nameSpan.style.cursor = 'pointer';
-            nameSpan.onclick = () => {
-                const newName = prompt("Enter category name:", cat.name);
-                if (newName) {
-                    cat.name = newName;
-                    renderEditor();
-                }
+            const nameInput = document.createElement('input');
+            nameInput.type = 'text';
+            nameInput.value = cat.name;
+            nameInput.title = "Edit category name";
+            nameInput.style.background = 'transparent';
+            nameInput.style.border = 'none';
+            nameInput.style.color = 'inherit';
+            nameInput.style.fontSize = 'inherit';
+            nameInput.style.fontWeight = 'inherit';
+            nameInput.style.textAlign = 'center';
+            nameInput.style.fontFamily = 'inherit';
+            nameInput.style.textTransform = 'uppercase';
+            nameInput.style.width = '80%';
+            nameInput.style.outline = 'none';
+            nameInput.onchange = (e) => {
+                cat.name = e.target.value || 'Untitled';
             };
             
             const deleteBtn = document.createElement('button');
@@ -112,15 +122,12 @@
             deleteBtn.style.cursor = 'pointer';
             deleteBtn.onclick = (e) => {
                 e.stopPropagation();
-                if (confirm(`Remove category "${cat.name}"?`)) {
-                    gameState.categories.splice(cIdx, 1);
-                    // update grid columns
-                    document.getElementById('editor-grid').style.gridTemplateColumns = `repeat(${gameState.categories.length}, 1fr)`;
-                    renderEditor();
-                }
+                gameState.categories.splice(cIdx, 1);
+                document.getElementById('editor-grid').style.gridTemplateColumns = `repeat(${gameState.categories.length}, 1fr)`;
+                renderEditor();
             };
             
-            header.appendChild(nameSpan);
+            header.appendChild(nameInput);
             header.appendChild(deleteBtn);
             grid.appendChild(header);
         });
@@ -141,7 +148,31 @@
                 grid.appendChild(tile);
             }
         }
+        
+        const addCatBtn = document.getElementById('btn-add-category');
+        if (gameState.categories.length < 5) {
+            addCatBtn.style.display = 'block';
+        } else {
+            addCatBtn.style.display = 'none';
+        }
+        document.getElementById('editor-grid').style.gridTemplateColumns = `repeat(${gameState.categories.length}, 1fr)`;
     }
+
+    document.getElementById('btn-add-category').onclick = () => {
+        if (gameState.categories.length < 5) {
+            const newCat = { name: "New Category", questions: [] };
+            for (let q = 0; q < 5; q++) {
+                newCat.questions.push({
+                    point_value: (q + 1) * 100,
+                    text: "",
+                    answer: "",
+                    hint: ""
+                });
+            }
+            gameState.categories.push(newCat);
+            renderEditor();
+        }
+    };
 
     function openEditorModal(cIdx, qIdx) {
         const q = gameState.categories[cIdx].questions[qIdx];
@@ -151,6 +182,7 @@
         document.getElementById('edit-text').value = q.text;
         document.getElementById('edit-answer').value = q.answer;
         document.getElementById('edit-hint').value = q.hint;
+        document.getElementById('modal-error').style.display = 'none';
         
         document.getElementById('editor-modal').classList.add('active');
     }
@@ -167,7 +199,9 @@
         const qAnswer = document.getElementById('edit-answer').value;
         
         if (qText.trim() !== '' && qAnswer.trim() === '') {
-            alert('If you add a question, you must also provide an answer.');
+            const err = document.getElementById('modal-error');
+            err.innerText = 'If you add a question, you must also provide an answer.';
+            err.style.display = 'block';
             return;
         }
         
@@ -184,10 +218,13 @@
 
     document.getElementById('btn-save').onclick = async () => {
         const title = document.getElementById('game-title').value;
+        const titleErr = document.getElementById('title-error');
         if (!title.trim()) {
-            alert('Please enter a game title.');
+            titleErr.innerText = 'Please enter a game title.';
+            titleErr.style.display = 'block';
             return;
         }
+        titleErr.style.display = 'none';
         gameState.title = title;
 
         // Filter out empty questions? Actually, just save everything.
@@ -217,11 +254,13 @@
             if (data.success) {
                 window.location.href = data.redirect_url;
             } else {
-                alert('Error saving game: ' + data.error);
+                titleErr.innerText = 'Error saving game: ' + data.error;
+                titleErr.style.display = 'block';
             }
         } catch (e) {
             console.error(e);
-            alert('Failed to save game.');
+            titleErr.innerText = 'Failed to save game.';
+            titleErr.style.display = 'block';
         }
     };
 

@@ -21,7 +21,7 @@ body {
     background-color: var(--bg-dark);
     background-image: 
         linear-gradient(rgba(61, 65, 39, 0.88), rgba(61, 65, 39, 0.88)),
-        url('../img/mossy_soft_bg.png');
+        url("../img/mossy_soft_bg.8a6460f4276f.png");
     background-size: cover;
     background-attachment: fixed;
     background-position: center;

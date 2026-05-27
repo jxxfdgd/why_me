@@ -153,8 +153,8 @@ class TriviaGame {
         document.getElementById('btn-award-t2').innerText = document.getElementById('team2-name').innerText;
         
         // Sync abilities labels with team names
-        document.getElementById('label-team1-abilities').innerText = document.getElementById('team1-name').innerText;
-        document.getElementById('label-team2-abilities').innerText = document.getElementById('team2-name').innerText;
+        document.getElementById('label-team1-abilities').innerText = document.getElementById('team1-name').innerText + " ABILITIES";
+        document.getElementById('label-team2-abilities').innerText = document.getElementById('team2-name').innerText + " ABILITIES";
         
         const hintBtn = document.getElementById('btn-show-hint');
         const hintBox = document.getElementById('modal-hint-text');

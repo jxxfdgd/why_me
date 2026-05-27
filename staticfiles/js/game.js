@@ -60,7 +60,7 @@ class TriviaGame {
                     if (q.hint && q.hint.trim() !== '') {
                         const hintIndicator = document.createElement('div');
                         hintIndicator.className = 'hint-indicator';
-                        hintIndicator.innerText = '💡 Hint Avail';
+                        hintIndicator.innerText = 'Hint';
                         tile.appendChild(hintIndicator);
                     }
                     
@@ -88,8 +88,8 @@ class TriviaGame {
                 const overlay = document.createElement('div');
                 overlay.className = 'modal-overlay active';
                 overlay.innerHTML = `
-                    <div class="modal-content" style="border-color: #10b981; box-shadow: 0 0 50px rgba(16, 185, 129, 0.5);">
-                        <h1 style="font-size: 4rem; color: #10b981;">GAME OVER</h1>
+                    <div class="modal-content" style="border-color: var(--accent-pink); box-shadow: 0 0 50px rgba(212, 222, 149, 0.5);">
+                        <h1 style="font-size: 4rem; color: var(--accent-pink);">GAME OVER</h1>
                         <h2 style="font-size: 3rem;">${winner}</h2>
                         <p style="font-size: 1.5rem; color: var(--text-secondary);">
                             Team 1: ${this.scores[1]} | Team 2: ${this.scores[2]}
@@ -149,8 +149,12 @@ class TriviaGame {
         document.getElementById('modal-answer-box').style.display = 'none';
         
         // Sync button text with team names
-        document.getElementById('btn-award-t1').innerText = "Award " + document.getElementById('team1-name').innerText;
-        document.getElementById('btn-award-t2').innerText = "Award " + document.getElementById('team2-name').innerText;
+        document.getElementById('btn-award-t1').innerText = document.getElementById('team1-name').innerText;
+        document.getElementById('btn-award-t2').innerText = document.getElementById('team2-name').innerText;
+        
+        // Sync abilities labels with team names
+        document.getElementById('label-team1-abilities').innerText = document.getElementById('team1-name').innerText;
+        document.getElementById('label-team2-abilities').innerText = document.getElementById('team2-name').innerText;
         
         const hintBtn = document.getElementById('btn-show-hint');
         const hintBox = document.getElementById('modal-hint-text');

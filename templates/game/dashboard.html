@@ -10,7 +10,7 @@
 <div class="grid-cards" style="margin-bottom: 3rem; justify-content: center;">
     {% for game in user_games %}
     <div class="glass-panel game-card" style="position: relative;">
-        <form action="{% url 'delete_game' game.id %}" method="post" onsubmit="return confirm('Delete this game?');">
+        <form action="{% url 'delete_game' game.id %}" method="post">
             {% csrf_token %}
             <button type="submit" style="position: absolute; right: 10px; top: 10px; background: none; border: none; color: rgba(255,255,255,0.5); font-size: 1.2rem; cursor: pointer;">✖</button>
         </form>
@@ -54,6 +54,7 @@
             </label>
             {% endfor %}
         </div>
+        <div id="quick-start-error" style="color: var(--accent-pink); font-size: 1rem; margin-bottom: 1rem; text-align: center; display: none;"></div>
         <button type="submit" id="btn-quick-start" class="btn btn-primary" disabled style="position: fixed !important; bottom: 40px !important; right: 40px !important; z-index: 9999 !important; box-shadow: 0 10px 30px rgba(0,0,0,0.5); padding: 1.5rem 3rem; font-size: 1.5rem; border-radius: 50px;">Generate Game</button>
     </form>
 </div>
@@ -63,13 +64,16 @@ function checkQuickStartCount(checkbox, labelId) {
     const checkedBoxes = document.querySelectorAll('input[name="categories"]:checked');
     const btn = document.getElementById('btn-quick-start');
     const label = document.getElementById(labelId);
+    const err = document.getElementById('quick-start-error');
     
-    // Optional: limit to 5
+    // limit to 5
     if (checkedBoxes.length > 5 && checkbox.checked) {
         checkbox.checked = false;
-        alert("Please select exactly 5 categories.");
+        err.innerText = "Please select exactly 5 categories.";
+        err.style.display = 'block';
         return;
     }
+    err.style.display = 'none';
     
     if (checkbox.checked) {
         label.classList.add('selected');

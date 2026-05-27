@@ -149,12 +149,8 @@ class TriviaGame {
         document.getElementById('modal-answer-box').style.display = 'none';
         
         // Sync button text with team names
-        document.getElementById('btn-award-t1').innerText = document.getElementById('team1-name').innerText;
-        document.getElementById('btn-award-t2').innerText = document.getElementById('team2-name').innerText;
-        
-        // Sync abilities labels with team names
-        document.getElementById('label-team1-abilities').innerText = document.getElementById('team1-name').innerText;
-        document.getElementById('label-team2-abilities').innerText = document.getElementById('team2-name').innerText;
+        document.getElementById('btn-award-t1').innerText = "Award " + document.getElementById('team1-name').innerText;
+        document.getElementById('btn-award-t2').innerText = "Award " + document.getElementById('team2-name').innerText;
         
         const hintBtn = document.getElementById('btn-show-hint');
         const hintBox = document.getElementById('modal-hint-text');
